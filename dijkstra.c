@@ -16,8 +16,8 @@ extern int d[N];
  * @return なし
  */
 void add(int u, bool S[]) {
-  // 関数を完成させる．
-
+  S[u] = true;
+  Scount++;
 }
 
 /**
@@ -25,8 +25,10 @@ void add(int u, bool S[]) {
  * @return S に追加されていない頂点が存在すれば true，それ以外は false
  */
 static bool remain() {
-  // 関数を完成させる．
-
+  if (Scount < N)
+    return true;
+  else
+    return false;
 }
 
 /**
@@ -36,8 +38,15 @@ static bool remain() {
  * @return 未確定の d[] が最小の頂点
  */
 int select_min() {
-  // 関数を完成させる．
-
+  int min_val = M;
+  int min_idx = -1;
+  for (int i = 0; i < N; i++) {
+    if (!S[i] && d[i] < min_val) {
+      min_val = d[i];
+      min_idx = i;
+    }
+  } 
+  return min_idx;
 }
 
 /**
@@ -48,8 +57,10 @@ int select_min() {
  * @return 辺が存在すれば true, それ以外は false
  */
 bool member(int u, int x) {
-  // 関数を完成させる．
-
+  if (w[u][x] != M)
+    return true;
+  else
+    return false;
 }
 
 /**
@@ -74,12 +85,12 @@ void dijkstra(int p) {
 
     for (int x = 0; x < N; x++) {
       if (member(u, x)) {
-	int k = d[u] + w[u][x];
-	// (B)
-	if (d[x] == M)
-	  d[x] = k;
-	else if (k < d[x])
-	  d[x] = k;
+        int k = d[u] + w[u][x];
+        // (B)
+        if (d[x] == M)
+          d[x] = k;
+        else if (k < d[x])
+          d[x] = k;
       }
     }
   }

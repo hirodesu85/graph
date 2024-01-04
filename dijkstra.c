@@ -8,6 +8,7 @@ extern int w[N][N];
 extern bool S[N];
 extern int Scount;                      // 頂点集合Sの要素数
 extern int d[N];
+extern int parent[];                    // 最短路の親頂点を格納する配列
 
 /**
  * 頂点集合 S に頂点 u を追加する．
@@ -73,7 +74,7 @@ void dijkstra(int p) {
 
   for (int i = 0; i < N; i++) {
     d[i] = w[p][i];
-    // (A)
+    parent[i] = p;
   }
 
   while (remain()) {
@@ -86,11 +87,13 @@ void dijkstra(int p) {
     for (int x = 0; x < N; x++) {
       if (member(u, x)) {
         int k = d[u] + w[u][x];
-        // (B)
-        if (d[x] == M)
+        if (d[x] == M) {
           d[x] = k;
-        else if (k < d[x])
+          parent[x] = u;
+        } else if (k < d[x]) {
           d[x] = k;
+          parent[x] = u;
+        }
       }
     }
   }
@@ -111,4 +114,25 @@ void display(char* name, int* ary, int length) {
       printf(" %d", ary[i]);
   }
   printf(" ]\n");
+}
+
+/**
+ * 出発点から各頂点への最短路を表示する．
+ * @param parent 直前の頂点を格納する配列
+ * @param p 出発点
+ * @param q 目的地
+ * @return なし
+*/
+void display_shortest_path(int* parent, int p, int q) {
+  if (parent[q] == p && !member(p, q)) {
+    printf("No path");
+    return;
+  }
+
+  if (q == p) {
+    printf("%d", p);
+  } else {
+    display_shortest_path(parent, p, parent[q]);
+    printf(" -> %d", q);
+  }
 }
